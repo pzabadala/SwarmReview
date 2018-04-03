@@ -1,6 +1,5 @@
 package application;
 	
-import com.sun.javafx.event.EventHandlerManager;
 
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
@@ -14,7 +13,6 @@ import javafx.geometry.Pos;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.scene.Scene;
-import javafx.scene.chart.PieChart.Data;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -90,12 +88,11 @@ public class Main extends Application {
 		Text swarmDetailsFld = new Text();
 		swarmDetailsFld.setText("Details");
 		swarmDetailsFld.wrappingWidthProperty().set(300);
-		grid.add(swarmDetailsFld, 1, 4);
 		
+		grid.add(swarmDetailsFld, 1, 4);
 		grid.add(label, 1, 5);
 		
 		return grid;
-		
 	}
 	
 	public GridPane createLoginGrid() {
@@ -123,18 +120,25 @@ public class Main extends Application {
 		hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
 		hbBtn.getChildren().add(loginBtn);
 		
+		Label authFailed = new Label("");
+		authFailed.setTextFill(Color.web("red"));
+		grid.add(authFailed, 0, 4);
+		
+		
 		loginBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				Button btn = (Button)event.getSource();
-				Stage stage = (Stage)btn.getScene().getWindow();
-				stage.close();
-				runStage(createListGrid());
-				
+				authFailed.setText("");
+				if(ActionController.login(userTextField.getText() , pwBox.getText())) {
+					Button btn = (Button)event.getSource();
+					Stage stage = (Stage)btn.getScene().getWindow();
+					stage.close();
+					runStage(createListGrid());
+				} else {
+					authFailed.setText("Authorization failed");
+				}
 			}
-			
 		});
-		
 		grid.add(hbBtn, 1, 4);
 		return grid;
 		
@@ -149,12 +153,10 @@ public class Main extends Application {
 	}
 	
 	public  ListView<SwarmItem> createSwarmList() {
-		
 		ListView<SwarmItem> list = new ListView<SwarmItem>();
 	    data = FXCollections.observableArrayList(
 	            new SwarmItem("pierwszy"), new SwarmItem("drugi"));
 	    
- 
         list.setCellFactory(new Callback<ListView<SwarmItem>, 
             ListCell<SwarmItem>>() {
                 @Override 
@@ -187,9 +189,7 @@ public class Main extends Application {
             if (item != null) {
                rect.setFill(Color.web("red")); 
                setGraphic(rect);
-               setText(item.url);
-               
-                
+               setText(item.url);   
             }
         }
     }
