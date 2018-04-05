@@ -67,6 +67,8 @@ public class Main extends Application {
 		newSwarmBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
+				
+				ActionController.getImsMembers();
 				if(newSwarmFld.getText().length() != 0 )
 					data.add(new SwarmItem(newSwarmFld.getText()));
 			}
