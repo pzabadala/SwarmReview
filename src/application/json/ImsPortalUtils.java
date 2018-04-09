@@ -1,6 +1,5 @@
 package application.json;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -8,26 +7,17 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-public class JsonUtils {
+public class ImsPortalUtils {
 	Gson gson;
 	
 	public static Map<String, List<String>> getUsersFromJson(String json){
 		Gson gson = new Gson();
-		User[] users = gson.fromJson(json, User[].class);
+		ImsPortalUser[] users = gson.fromJson(json, ImsPortalUser[].class);
 		
-		/*
-		Type collectionType = new TypeToken<List<User>>(){}.getType();
-		List<User> userList = (List<User>) new Gson()
-		               .fromJson( json , collectionType);
-		*/
-		
-		List<User> userList = Arrays.asList(users);
-		List<String> nameList = new ArrayList<>();
+		List<ImsPortalUser> userList = Arrays.asList(users);
 		Map<String, List<String>> map = new HashMap<String, List<String>>();
-		for (User user : userList) {
-			System.out.println(user.mysingle_id);
+		for (ImsPortalUser user : userList) {
 			if(map.containsKey(user.team__name)) {
 				map.get(user.team__name).add(user.mysingle_id);
 			}else {
@@ -35,5 +25,13 @@ public class JsonUtils {
 			}
 		}
 		return map;
+	}
+	
+	private class ImsPortalUser {
+		String name;
+		boolean active;
+		String team__name;
+		String mysingle_id;
+
 	}
 }

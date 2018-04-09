@@ -1,6 +1,7 @@
 package application;
 	
 
+import application.net.swarm.ReviewItem;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -32,8 +33,9 @@ public class Main extends Application {
 	
 	private Scene scene;
 	final Label label = new Label();
-	ObservableList<SwarmItem> data;
+	ObservableList<ReviewItem> data;
 	TextField newSwarmFld;
+	
 	
 	@Override
 	public void start(Stage primaryStage) {
@@ -70,7 +72,7 @@ public class Main extends Application {
 				
 				ActionController.getImsMembers();
 				if(newSwarmFld.getText().length() != 0 )
-					data.add(new SwarmItem(newSwarmFld.getText()));
+					data.add(new ReviewItem(newSwarmFld.getText()));
 			}
 			
 		});
@@ -81,7 +83,7 @@ public class Main extends Application {
 		Label newSwarmListLbl = new Label("Swarms:");
 		grid.add(newSwarmListLbl, 0, 3);
 				
-		ListView<SwarmItem> swarmList = createSwarmList();
+		ListView<ReviewItem> swarmList = createSwarmList();
 		grid.add(swarmList, 1, 3);
 		
 		Label swarmDetailsLbl = new Label("Details:");
@@ -154,26 +156,25 @@ public class Main extends Application {
 		stage.show();
 	}
 	
-	public  ListView<SwarmItem> createSwarmList() {
-		ListView<SwarmItem> list = new ListView<SwarmItem>();
+	public  ListView<ReviewItem> createSwarmList() {
+		ListView<ReviewItem> list = new ListView<ReviewItem>();
 	    data = FXCollections.observableArrayList(
-	            new SwarmItem("pierwszy"), new SwarmItem("drugi"));
+	            new ReviewItem("pierwszy"), new ReviewItem("drugi"));
 	    
-        list.setCellFactory(new Callback<ListView<SwarmItem>, 
-            ListCell<SwarmItem>>() {
+        list.setCellFactory(new Callback<ListView<ReviewItem>, 
+            ListCell<ReviewItem>>() {
                 @Override 
-                public ListCell<SwarmItem> call(ListView<SwarmItem> list) {
+                public ListCell<ReviewItem> call(ListView<ReviewItem> list) {
                     return new SwarmItemList();
                 }
             }
         );
         
 	    list.getSelectionModel().selectedItemProperty().addListener(
-	            new ChangeListener<SwarmItem>() {
-	                public void changed(ObservableValue<? extends SwarmItem> ov, 
-	                		SwarmItem old_val, SwarmItem new_val) {
-	                		//TODO: update UI here !
-	                        label.setText(new_val.author);
+	            new ChangeListener<ReviewItem>() {
+	                public void changed(ObservableValue<? extends ReviewItem> ov, 
+	                		ReviewItem old_val, ReviewItem new_val) {
+	                        //label.setText(new_val.author);
 	                        //label.setTextFill(Color.web(new_val));
 	            }
 	        });
@@ -181,17 +182,17 @@ public class Main extends Application {
 	    return list;
 	}
 	
-	static class SwarmItemList extends ListCell<SwarmItem> {
+	static class SwarmItemList extends ListCell<ReviewItem> {
 			
         @Override
-        public void updateItem(SwarmItem item, boolean empty) {
+        public void updateItem(ReviewItem item, boolean empty) {
             super.updateItem(item, empty);
             
             Rectangle rect = new Rectangle(20, 20);
             if (item != null) {
                rect.setFill(Color.web("red")); 
                setGraphic(rect);
-               setText(item.url);   
+               //setText(item.url);   
             }
         }
     }

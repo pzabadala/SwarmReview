@@ -2,33 +2,43 @@ package application;
 
 import java.io.IOException;
 import java.util.List;
-import com.google.gson.Gson;
+import java.util.Map;
 
-import application.json.JsonUtils;
-import net.ImsPortalRequest;
-import net.SwarmRequest;
+import application.net.ImsPortalRequest;
+import application.json.ImsPortalUtils;
+import application.net.SwarmRequest;
 
 public class ActionController {
+	
+	public static  Map<String, List<String>> members;
+	
 	public static boolean login(String login, String pass) {
-		SwarmRequest sq = new SwarmRequest(login, pass);
 		try {
+			SwarmRequest sq = new SwarmRequest(login, pass);
 			sq.getRESTResponse();
+			/*
+			 * set static cache that keeps user and pass
+			 */
+			sq.setCache(login, pass);
 			return true;
 		}catch (IOException ex) {
+			ex.printStackTrace();
+			return false;
+		}catch (IllegalAccessException ex) {
+			ex.printStackTrace();
 			return false;
 		}
-		
 	}
 	
-	public static List<String> getTeamMates(String team){
-		return null;
+	public static List<String> getImsMembers(String team){
+		return members.get(team);
 	}
 	
 	public static List<String> getImsMembers(){
 		try {
-			ImsPortalRequest imsMembersReq = new ImsPortalRequest(Constans.ImsPortalMembersUrl);
+			ImsPortalRequest imsMembersReq = new ImsPortalRequest(Constants.ImsPortalMembersUrl);
 			String membersJson = imsMembersReq.getHttpResponse();
-			JsonUtils.getUsersFromJson(membersJson);
+			ImsPortalUtils.getUsersFromJson(membersJson);
 		}catch (IOException ex) {
 			return null;
 		}

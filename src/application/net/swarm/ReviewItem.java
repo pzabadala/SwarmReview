@@ -1,8 +1,8 @@
-package application;
+package application.net.swarm;
 
 import java.util.List;
 
-public class SwarmItem {
+public class ReviewItem extends SwarmItem {
 	String author;
 	String url;
 	List<String> reviewers;
@@ -11,7 +11,7 @@ public class SwarmItem {
 	int swarmCount;
 	static int count;
 	
-	public SwarmItem(String url) {
+	public ReviewItem(String url) {
 		//TODO url should be validated
 		author = "Piotr";
 		hasVoteUp = false;
