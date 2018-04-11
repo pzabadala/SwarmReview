@@ -7,6 +7,7 @@ import java.util.Map;
 import application.net.ImsPortalRequest;
 import application.json.ImsPortalUtils;
 import application.net.SwarmRequest;
+import application.net.swarm.LoginItem;
 
 public class ActionController {
 	
@@ -14,8 +15,9 @@ public class ActionController {
 	
 	public static boolean login(String login, String pass) {
 		try {
-			SwarmRequest sq = new SwarmRequest(login, pass);
-			sq.getRESTResponse();
+			SwarmRequest sq = new SwarmRequest (login, pass, new LoginItem());
+			String loginResponse = sq.getRESTResponse();
+			System.out.println(loginResponse);
 			/*
 			 * set static cache that keeps user and pass
 			 */

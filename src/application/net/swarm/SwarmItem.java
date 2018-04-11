@@ -1,12 +1,15 @@
 package application.net.swarm;
 
+import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
 
 import application.Constants;
 
 public class SwarmItem {
-	transient String baseUrl = Constants.SwarmReviewUrl;
 	
+	public static String baseUrl = Constants.SwarmReviewUrl;
 	public String getFieldsList() throws IllegalAccessException {
 			StringBuilder sb = new StringBuilder();
 			sb.append("fields=");
@@ -18,6 +21,7 @@ public class SwarmItem {
 		return sb.toString();
 	}
 	
+
 	public String getQuerryUrl() {
 		
 		return "";

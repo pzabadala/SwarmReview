@@ -29,8 +29,7 @@ public class SwarmUpdateScheduler {
 		
 		@Override
 		public void run() {
-			String url = Constants.SwarmReviewUrl;
-			SwarmRequest<ReviewItem> swarmReq = new SwarmRequest<ReviewItem>(url);
+			SwarmRequest swarmReq = new SwarmRequest(new ReviewItem());
 			
 			/**
 			 * TODO: Implement listeners for handling new list of reviews 

@@ -72,7 +72,7 @@ public class Main extends Application {
 				
 				ActionController.getImsMembers();
 				if(newSwarmFld.getText().length() != 0 )
-					data.add(new ReviewItem(newSwarmFld.getText()));
+					data.add(new ReviewItem());
 			}
 			
 		});
@@ -159,7 +159,7 @@ public class Main extends Application {
 	public  ListView<ReviewItem> createSwarmList() {
 		ListView<ReviewItem> list = new ListView<ReviewItem>();
 	    data = FXCollections.observableArrayList(
-	            new ReviewItem("pierwszy"), new ReviewItem("drugi"));
+	            new ReviewItem(), new ReviewItem());
 	    
         list.setCellFactory(new Callback<ListView<ReviewItem>, 
             ListCell<ReviewItem>>() {
