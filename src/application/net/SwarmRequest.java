@@ -66,8 +66,6 @@ public class SwarmRequest {
 		httpParams = getFieldsMap();
 		
 		for(String key:httpParams.keySet()) {
-			sb.append(key);
-			sb.append("=");
 			sb.append(httpParams.get(key));
 			sb.append("&");
 		}
@@ -76,15 +74,14 @@ public class SwarmRequest {
 		HttpURLConnection urlConnection = setUsernamePassword(url);
 		urlConnection.setRequestMethod("GET");
 		
-		
-		
 		BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
 		String line;
+		sb = new StringBuilder();
 		while ((line = reader.readLine()) != null) {
 			sb.append(line);
 		}
 		reader.close();
-		
+		System.out.println(sb);
 		return sb.toString();
 	}
 
@@ -97,11 +94,10 @@ public class SwarmRequest {
 	}
 	
 	public Map<String, String> getFieldsMap() throws IllegalAccessException {
-
 		Field[] fields = item.getClass().getDeclaredFields();
 		Map<String, String> map = new HashMap<String, String>();
 		for(int i=0; i < fields.length; i++) {
-			map.put(fields[i].getName(), (String)fields[i].get(null));
+			map.put(fields[i].getName(), (String)fields[i].get(item));
 		}
 		return map;
 	}
@@ -110,8 +106,6 @@ public class SwarmRequest {
 		userCache = new UserCache(user, pass);
 	}
 	
-	
-
 	
 	/*
 	 * Runtime static cache created after successful login to swarm over http

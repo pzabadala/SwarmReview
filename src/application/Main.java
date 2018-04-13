@@ -1,7 +1,9 @@
 package application;
 	
 
-import application.net.swarm.ReviewItem;
+
+import application.json.SwarmUtils;
+import application.timers.SwarmUpdateScheduler;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -33,7 +35,7 @@ public class Main extends Application {
 	
 	private Scene scene;
 	final Label label = new Label();
-	ObservableList<ReviewItem> data;
+	ObservableList<SwarmUtils.ReviewJsonItem> data;
 	TextField newSwarmFld;
 	
 	
@@ -45,6 +47,12 @@ public class Main extends Application {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	@Override
+	public void stop(){
+	    System.out.println("Stage is closing");
+	    ActionController.stopUpdateReviewList();
 	}
 	
 	public static void main(String[] args) {
@@ -70,11 +78,10 @@ public class Main extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 				
-				ActionController.getImsMembers();
+				
 				if(newSwarmFld.getText().length() != 0 )
-					data.add(new ReviewItem());
+					data.add(new SwarmUtils.ReviewJsonItem());
 			}
-			
 		});
 
 		newSwarmFld = new TextField();
@@ -83,7 +90,7 @@ public class Main extends Application {
 		Label newSwarmListLbl = new Label("Swarms:");
 		grid.add(newSwarmListLbl, 0, 3);
 				
-		ListView<ReviewItem> swarmList = createSwarmList();
+		ListView<SwarmUtils.ReviewJsonItem> swarmList = createSwarmList();
 		grid.add(swarmList, 1, 3);
 		
 		Label swarmDetailsLbl = new Label("Details:");
@@ -134,10 +141,25 @@ public class Main extends Application {
 			public void handle(ActionEvent event) {
 				authFailed.setText("");
 				if(ActionController.login(userTextField.getText() , pwBox.getText())) {
+					
+					
+					/*
+					 * Mo¿na zastanowiæ nad maszyn¹ stanów (albo w ActionControllerze albo obok niego), 
+					 * ¿eby kolejnych akcji nie wywo³ywaæ z palca w UI eventach
+					 */
 					Button btn = (Button)event.getSource();
 					Stage stage = (Stage)btn.getScene().getWindow();
 					stage.close();
 					runStage(createListGrid());
+					
+					/*
+					 * Odpalenie schedulera updejtuj¹cego listê review 
+					 * po poprawnym zalogowaniu 
+					 * (login i pass s¹ ju¿ wrzucone jako statyczne pola do SwarmRequestu)
+					 */
+					ActionController.startUpdateReviewList();
+					
+					
 				} else {
 					authFailed.setText("Authorization failed");
 				}
@@ -156,24 +178,24 @@ public class Main extends Application {
 		stage.show();
 	}
 	
-	public  ListView<ReviewItem> createSwarmList() {
-		ListView<ReviewItem> list = new ListView<ReviewItem>();
+	public  ListView<SwarmUtils.ReviewJsonItem> createSwarmList() {
+		ListView<SwarmUtils.ReviewJsonItem> list = new ListView<SwarmUtils.ReviewJsonItem>();
 	    data = FXCollections.observableArrayList(
-	            new ReviewItem(), new ReviewItem());
+	            new SwarmUtils.ReviewJsonItem(), new SwarmUtils.ReviewJsonItem());
 	    
-        list.setCellFactory(new Callback<ListView<ReviewItem>, 
-            ListCell<ReviewItem>>() {
+        list.setCellFactory(new Callback<ListView<SwarmUtils.ReviewJsonItem>, 
+            ListCell<SwarmUtils.ReviewJsonItem>>() {
                 @Override 
-                public ListCell<ReviewItem> call(ListView<ReviewItem> list) {
+                public ListCell<SwarmUtils.ReviewJsonItem> call(ListView<SwarmUtils.ReviewJsonItem> list) {
                     return new SwarmItemList();
                 }
             }
         );
         
 	    list.getSelectionModel().selectedItemProperty().addListener(
-	            new ChangeListener<ReviewItem>() {
-	                public void changed(ObservableValue<? extends ReviewItem> ov, 
-	                		ReviewItem old_val, ReviewItem new_val) {
+	            new ChangeListener<SwarmUtils.ReviewJsonItem>() {
+	                public void changed(ObservableValue<? extends SwarmUtils.ReviewJsonItem> ov, 
+	                		SwarmUtils.ReviewJsonItem old_val, SwarmUtils.ReviewJsonItem new_val) {
 	                        //label.setText(new_val.author);
 	                        //label.setTextFill(Color.web(new_val));
 	            }
@@ -182,10 +204,10 @@ public class Main extends Application {
 	    return list;
 	}
 	
-	static class SwarmItemList extends ListCell<ReviewItem> {
+	static class SwarmItemList extends ListCell<SwarmUtils.ReviewJsonItem> {
 			
         @Override
-        public void updateItem(ReviewItem item, boolean empty) {
+        public void updateItem(SwarmUtils.ReviewJsonItem item, boolean empty) {
             super.updateItem(item, empty);
             
             Rectangle rect = new Rectangle(20, 20);

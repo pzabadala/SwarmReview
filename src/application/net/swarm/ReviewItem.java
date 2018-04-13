@@ -1,14 +1,14 @@
 package application.net.swarm;
 
-import java.util.List;
+
 
 public class ReviewItem extends SwarmItem {
 	
-	public ReviewItem() {
-
+	public ReviewItem(String teamMembers) {
+		participants = teamMembers;
 	}
-	String participants;
-	String state = "needsReview";
-	String fields= "state,id,author,created,description";
+	public static String participants;
+	public static String state = "state=needsReview";
+	public static String fields= "fields=state,id,author,created,participants";
 
 }

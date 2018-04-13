@@ -7,24 +7,10 @@ import java.util.Map;
 
 import application.Constants;
 
+/*
+ * Na podstawie pol tej klasy (i subklasy) tworzony jest URL do swarma
+ */
 public class SwarmItem {
-	
 	public static String baseUrl = Constants.SwarmReviewUrl;
-	public String getFieldsList() throws IllegalAccessException {
-			StringBuilder sb = new StringBuilder();
-			sb.append("fields=");
-			Field[] fields = this.getClass().getDeclaredFields();
-			for(int i =0; i < fields.length; i++) {
-				sb.append(fields[i].getName());
-				sb.append(",");
-			}
-		return sb.toString();
-	}
-	
-
-	public String getQuerryUrl() {
-		
-		return "";
-	}
 }
 

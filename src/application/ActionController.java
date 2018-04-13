@@ -8,6 +8,7 @@ import application.net.ImsPortalRequest;
 import application.json.ImsPortalUtils;
 import application.net.SwarmRequest;
 import application.net.swarm.LoginItem;
+import application.timers.SwarmUpdateScheduler;
 
 public class ActionController {
 	
@@ -17,7 +18,6 @@ public class ActionController {
 		try {
 			SwarmRequest sq = new SwarmRequest (login, pass, new LoginItem());
 			String loginResponse = sq.getRESTResponse();
-			System.out.println(loginResponse);
 			/*
 			 * set static cache that keeps user and pass
 			 */
@@ -32,6 +32,18 @@ public class ActionController {
 		}
 	}
 	
+	public static void startUpdateReviewList() {
+		getImsMembers();
+		SwarmUpdateScheduler scheduler = SwarmUpdateScheduler.getInstance();
+		scheduler.startSwarmListUpdate();
+		
+	}
+	
+	public static void stopUpdateReviewList() {
+		SwarmUpdateScheduler scheduler = SwarmUpdateScheduler.getInstance();
+		scheduler.stopSwarmListUpdate();
+	}
+	
 	public static List<String> getImsMembers(String team){
 		return members.get(team);
 	}
@@ -40,7 +52,7 @@ public class ActionController {
 		try {
 			ImsPortalRequest imsMembersReq = new ImsPortalRequest(Constants.ImsPortalMembersUrl);
 			String membersJson = imsMembersReq.getHttpResponse();
-			ImsPortalUtils.getUsersFromJson(membersJson);
+			members = ImsPortalUtils.getUsersFromJson(membersJson);
 		}catch (IOException ex) {
 			return null;
 		}
